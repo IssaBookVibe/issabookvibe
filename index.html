@@ -362,27 +362,74 @@ function fullJournal(){
   </div>`;
 }
 
-// ── SAVE AS IMAGE ─────────────────────────────────────────────────
+// ── SAVE AS IMAGE (IG Story 9:16) ────────────────────────────────
 function saveCard(){
   const el=document.getElementById('vibeCard');
   if(!el){alert('Generate the card first!');return;}
   const btn=document.getElementById('saveBtn');
   btn.textContent='Saving...';
   btn.disabled=true;
+
   html2canvas(el,{
-    backgroundColor:null,
+    backgroundColor:'#0a0618',
     scale:2,
     useCORS:true,
-    logging:false
-  }).then(canvas=>{
+    logging:false,
+    allowTaint:true
+  }).then(cardCanvas=>{
+    // IG Story dimensions: 1080 x 1920
+    const storyW=1080;
+    const storyH=1920;
+    const story=document.createElement('canvas');
+    story.width=storyW;
+    story.height=storyH;
+    const ctx=story.getContext('2d');
+
+    // Draw background gradient matching the app
+    const grad=ctx.createLinearGradient(0,0,storyW,storyH);
+    grad.addColorStop(0,'#0a0618');
+    grad.addColorStop(0.55,'#130826');
+    grad.addColorStop(1,'#091508');
+    ctx.fillStyle=grad;
+    ctx.fillRect(0,0,storyW,storyH);
+
+    // Subtle glow orbs for depth
+    const glow1=ctx.createRadialGradient(storyW,0,0,storyW,0,500);
+    glow1.addColorStop(0,'rgba(236,72,153,0.15)');
+    glow1.addColorStop(1,'transparent');
+    ctx.fillStyle=glow1;
+    ctx.fillRect(0,0,storyW,storyH);
+
+    const glow2=ctx.createRadialGradient(0,storyH,0,0,storyH,500);
+    glow2.addColorStop(0,'rgba(74,222,128,0.1)');
+    glow2.addColorStop(1,'transparent');
+    ctx.fillStyle=glow2;
+    ctx.fillRect(0,0,storyW,storyH);
+
+    // Scale card to fit width with padding, center vertically
+    const padding=60;
+    const availW=storyW-(padding*2);
+    const scale=availW/cardCanvas.width;
+    const scaledH=cardCanvas.height*scale;
+    const xOffset=padding;
+    const yOffset=Math.max(padding, (storyH-scaledH)/2);
+
+    ctx.drawImage(cardCanvas, xOffset, yOffset, availW, scaledH);
+
+    // IssaBookVibe watermark at bottom
+    ctx.font='bold 28px DM Sans, sans-serif';
+    ctx.fillStyle='rgba(167,139,250,0.6)';
+    ctx.textAlign='center';
+    ctx.fillText('IssaBookVibe', storyW/2, storyH-50);
+
     const link=document.createElement('a');
     link.download=`IssaBookVibe_${(S.title||'card').replace(/\s+/g,'_')}.png`;
-    link.href=canvas.toDataURL('image/png');
+    link.href=story.toDataURL('image/png');
     link.click();
-    btn.textContent='💾 Save Card as Image';
+    btn.textContent='💾 Save Vibe Card';
     btn.disabled=false;
   }).catch(()=>{
-    btn.textContent='💾 Save Card as Image';
+    btn.textContent='💾 Save Vibe Card';
     btn.disabled=false;
     alert('Could not save — try a screenshot!');
   });
@@ -415,7 +462,7 @@ function render(){
   } else {
     const tabs=['card','detail'].map(t=>`<button onclick="S.tab='${t}';render()" style="flex:1;padding:12px;border-radius:12px;border:none;font-family:'DM Sans',sans-serif;background:${S.tab===t?'linear-gradient(135deg,#7e22ce,#be185d)':'rgba(255,255,255,0.06)'};color:${S.tab===t?'#fff':'#9ca3af'};font-size:13px;font-weight:700">${t==='card'?'📸 Vibe Card':'📖 Full Journal'}</button>`).join('');
 
-    const saveBtn=S.tab==='card'?`<button id="saveBtn" onclick="saveCard()" style="width:100%;margin-top:12px;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#1d4ed8,#7e22ce);color:#fff;font-size:14px;font-weight:800;font-family:'DM Sans',sans-serif;box-shadow:0 0 18px rgba(99,102,241,0.3)">💾 Save Card as Image</button>`:'';
+    const saveBtn=S.tab==='card'?`<button id="saveBtn" onclick="saveCard()" style="width:100%;margin-top:12px;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#1d4ed8,#7e22ce);color:#fff;font-size:14px;font-weight:800;font-family:'DM Sans',sans-serif;box-shadow:0 0 18px rgba(99,102,241,0.3)">💾 Save Vibe Card</button>`:'';
 
     body=`
       <div style="display:flex;gap:8px;margin-bottom:18px">${tabs}</div>
