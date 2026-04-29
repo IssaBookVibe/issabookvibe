@@ -3,122 +3,412 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>IssaBookVibe</title>
+<title>Issa Book Vibe — Where Audiobook & Book Lovers Log Their Vibes</title>
+<meta name="description" content="No Pressure, Just Vibes — A vibe based book logging and journaling system for lovers of Black Authors and Urban Fiction."/>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{min-height:100vh;background:linear-gradient(160deg,#0a0618 0%,#130826 55%,#091508 100%);font-family:'DM Sans',sans-serif;color:#f3e8ff;display:flex;flex-direction:column;align-items:center;padding:40px 20px 60px}
+:root{
+  --bg-deep:#0a0618;--bg-card:#130826;--bg-card-2:#1a0533;
+  --purple:#a855f7;--purple-deep:#7c3aed;--pink:#ec4899;--pink-soft:#f9a8d4;
+  --green:#4ade80;--green-soft:#86efac;
+  --text:#f3e8ff;--text-muted:#c4b5fd;--text-dim:#6b7280;
+  --border:rgba(192,132,252,0.25);
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:linear-gradient(160deg,#0a0618 0%,#130826 55%,#091508 100%);background-attachment:fixed;color:var(--text);line-height:1.6;overflow-x:hidden}
  
-.logo{display:inline-flex;align-items:center;background:#000;padding:10px 20px;border-radius:14px;border:2px solid rgba(192,132,252,0.4);margin-bottom:10px;box-shadow:0 0 30px rgba(192,132,252,0.2)}
-.logo span{font-size:26px;font-weight:900}
+/* NAV */
+nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(20px);background:rgba(10,6,24,0.7);border-bottom:1px solid var(--border);padding:14px 24px}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:inline-flex;align-items:center;background:#000;padding:6px 12px;border-radius:9px;border:1.5px solid rgba(192,132,252,0.3);text-decoration:none}
+.nav-logo .a{color:#fff;font-size:14px;font-weight:900}
+.nav-logo .b{color:var(--pink-soft);font-size:14px;font-weight:800;font-style:italic;margin-left:3px}
+.nav-logo .c{color:var(--green);font-size:14px;font-weight:900;letter-spacing:1px;margin-left:4px}
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:13px;transition:color 0.2s;font-weight:600}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:9px 18px;background:linear-gradient(135deg,var(--purple-deep),var(--pink));color:#fff!important;border-radius:999px;font-weight:700}
  
-.tagline{font-size:13px;color:#a78bfa;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px}
-.subtitle{font-size:14px;color:#9ca3af;text-align:center;max-width:320px;line-height:1.7;margin-bottom:44px}
+/* HERO */
+.hero{padding:70px 24px 90px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(168,85,247,0.18) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{display:inline-block;padding:7px 16px;border-radius:999px;background:rgba(236,72,153,0.15);border:1px solid rgba(236,72,153,0.3);color:var(--pink-soft);font-size:12px;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:22px;position:relative;z-index:1;font-weight:700}
+h1{font-size:clamp(38px,7vw,72px);font-weight:800;line-height:1.05;margin-bottom:22px;letter-spacing:-0.03em;position:relative;z-index:1}
+h1 .accent{background:linear-gradient(135deg,var(--pink),var(--purple),var(--green));-webkit-background-clip:text;background-clip:text;color:transparent;font-style:italic}
+.hero-sub{max-width:600px;margin:0 auto 36px;font-size:clamp(16px,2vw,19px);color:var(--text-muted);position:relative;z-index:1}
+.hero-cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;position:relative;z-index:1}
  
-.section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:2.5px;color:#6b7280;margin-bottom:14px;width:100%;max-width:440px}
+/* BUTTONS */
+.btn{padding:14px 28px;border-radius:999px;border:none;font-family:inherit;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s}
+.btn-primary{background:linear-gradient(135deg,var(--purple-deep),var(--pink));color:#fff;box-shadow:0 8px 28px rgba(236,72,153,0.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(236,72,153,0.4)}
+.btn-secondary{background:rgba(168,85,247,0.1);border:1px solid var(--border);color:var(--text)}
+.btn-secondary:hover{background:rgba(168,85,247,0.2)}
  
-.cards{display:flex;flex-direction:column;gap:14px;width:100%;max-width:440px;margin-bottom:36px}
+/* APP CHOOSER */
+.app-chooser{max-width:900px;margin:0 auto;padding:60px 24px}
+.app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:30px}
+.app-card{background:linear-gradient(160deg,var(--bg-card),var(--bg-card-2));border:1px solid var(--border);border-radius:18px;padding:20px;text-align:center;text-decoration:none;color:var(--text);transition:all 0.2s;display:block}
+.app-card:hover{transform:translateY(-3px);border-color:var(--purple);box-shadow:0 8px 24px rgba(168,85,247,0.18)}
+.app-card .emoji{font-size:32px;margin-bottom:10px;display:block}
+.app-card h3{font-size:16px;font-weight:800;margin-bottom:5px}
+.app-card p{font-size:12px;color:var(--text-muted);line-height:1.5}
+.app-card .label{display:inline-block;font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border-radius:6px;margin-bottom:10px}
+.app-card .label.log{background:rgba(74,222,128,0.15);color:var(--green-soft);border:1px solid rgba(74,222,128,0.3)}
+.app-card .label.journal{background:rgba(192,132,252,0.15);color:var(--text-muted);border:1px solid rgba(192,132,252,0.3)}
  
-.card{display:flex;align-items:center;gap:16px;padding:18px 20px;border-radius:18px;border:1.5px solid rgba(192,132,252,0.18);background:rgba(255,255,255,0.03);text-decoration:none;transition:all 0.2s;cursor:pointer}
-.card:hover{transform:translateY(-2px);border-color:rgba(192,132,252,0.45);background:rgba(255,255,255,0.06);box-shadow:0 8px 30px rgba(0,0,0,0.3)}
-.card:active{transform:translateY(0)}
+/* SECTIONS */
+.section{padding:70px 24px;max-width:1100px;margin:0 auto}
+.section-eyebrow{text-align:center;color:var(--pink-soft);font-size:12px;letter-spacing:0.2em;text-transform:uppercase;margin-bottom:10px;font-weight:700}
+.section-title{font-size:clamp(28px,5vw,44px);font-weight:800;text-align:center;margin-bottom:14px;letter-spacing:-0.02em}
+.section-sub{text-align:center;color:var(--text-muted);max-width:540px;margin:0 auto 48px;font-size:16px}
  
-.card-icon{font-size:28px;width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.card-body{flex:1;min-width:0}
-.card-title{font-size:15px;font-weight:800;color:#f3e8ff;margin-bottom:4px}
-.card-desc{font-size:12px;color:#9ca3af;line-height:1.5}
-.card-arrow{color:#6b7280;font-size:18px;flex-shrink:0}
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.feature-card{background:linear-gradient(160deg,var(--bg-card),var(--bg-card-2));border:1px solid var(--border);border-radius:20px;padding:26px;transition:transform 0.2s,border-color 0.2s}
+.feature-card:hover{transform:translateY(-3px);border-color:var(--purple)}
+.feature-icon{width:50px;height:50px;border-radius:14px;background:linear-gradient(135deg,var(--purple-deep),var(--pink));display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:16px}
+.feature-card h3{font-size:18px;margin-bottom:8px;font-weight:800}
+.feature-card p{color:var(--text-muted);font-size:14px}
  
-.card.audio .card-icon{background:linear-gradient(135deg,rgba(192,132,252,0.2),rgba(190,24,93,0.2));border:1px solid rgba(192,132,252,0.3)}
-.card.book .card-icon{background:linear-gradient(135deg,rgba(74,222,128,0.2),rgba(6,95,70,0.2));border:1px solid rgba(74,222,128,0.3)}
-.card.audio-journal .card-icon{background:linear-gradient(135deg,rgba(167,139,250,0.2),rgba(126,34,206,0.2));border:1px solid rgba(167,139,250,0.3)}
-.card.book-journal .card-icon{background:linear-gradient(135deg,rgba(251,191,36,0.15),rgba(180,83,9,0.15));border:1px solid rgba(251,191,36,0.3)}
+/* COMMUNITY */
+.community-section{background:linear-gradient(135deg,rgba(236,72,153,0.1),rgba(168,85,247,0.1));border:1px solid var(--border);border-radius:28px;padding:48px 28px;margin:30px auto;max-width:680px;text-align:center}
+.community-section h2{font-size:clamp(26px,4vw,36px);margin-bottom:10px;font-weight:800}
+.community-section .promise{color:var(--green-soft);font-style:italic;font-size:13px;margin-bottom:28px}
+.community-blurb{background:rgba(10,6,24,0.4);border:1px solid var(--border);border-radius:18px;padding:24px 22px;margin:0 auto 24px;max-width:520px;text-align:left}
+.community-blurb p{color:var(--text);font-size:14px;line-height:1.7;margin-bottom:12px}
+.community-blurb p:last-of-type{margin-bottom:18px}
+.community-blurb .signature{color:var(--pink-soft);font-style:italic;text-align:center;font-size:14px}
+.community-blurb .signature strong{color:var(--pink-soft)}
+.fb-cta{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:linear-gradient(135deg,#1877f2,#3b5998);color:#fff!important;text-decoration:none;border-radius:999px;font-size:14px;font-weight:700;width:100%;justify-content:center;transition:all 0.2s}
+.fb-cta:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(24,119,242,0.35)}
+.signup-divider{display:flex;align-items:center;gap:12px;margin:24px auto 18px;max-width:460px}
+.signup-divider::before,.signup-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.signup-divider span{color:var(--text-dim);font-size:12px;text-transform:uppercase;letter-spacing:1.5px;font-weight:600}
+.signup-form{display:grid;gap:11px;max-width:460px;margin:0 auto}
+.signup-form input{width:100%;background:rgba(10,6,24,0.6);border:1px solid var(--border);border-radius:11px;padding:13px 15px;color:var(--text);font-family:inherit;font-size:14px}
+.signup-form input:focus{outline:none;border-color:var(--purple)}
+.checkbox-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.checkbox-pill{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;background:rgba(10,6,24,0.6);border:1px solid var(--border);border-radius:999px;cursor:pointer;font-size:13px;transition:all 0.2s}
+.checkbox-pill:has(input:checked){background:linear-gradient(135deg,var(--purple-deep),var(--pink));border-color:transparent}
+.checkbox-pill input{display:none}
+.field-label{text-align:left;color:var(--text-muted);font-size:12px;margin-bottom:-2px;margin-top:6px;font-weight:600}
  
-.card.audio{border-color:rgba(192,132,252,0.25)}
-.card.book{border-color:rgba(74,222,128,0.2)}
-.card.audio-journal{border-color:rgba(167,139,250,0.2)}
-.card.book-journal{border-color:rgba(251,191,36,0.18)}
+/* FEEDBACK */
+.feedback-section{background:var(--bg-card);border:1px solid var(--border);border-radius:28px;padding:42px 28px;margin:30px auto;max-width:680px}
+.feedback-section h2{font-size:clamp(26px,4vw,32px);text-align:center;margin-bottom:6px;font-weight:800}
+.feedback-section .sub{text-align:center;color:var(--text-muted);margin-bottom:28px;font-size:14px}
+.survey-section{margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.survey-section:last-of-type{border-bottom:none}
+.survey-q{font-weight:700;margin-bottom:10px;color:var(--text);font-size:14px}
+.star-row{display:flex;gap:3px;align-items:center}
+.star{cursor:pointer;font-size:24px;opacity:0.3;transition:all 0.15s;user-select:none}
+.star.active{opacity:1;transform:scale(1.1)}
+.vibe-toggle{display:flex;gap:8px;flex-wrap:wrap}
+.vibe-toggle button{padding:9px 16px;border-radius:999px;border:1px solid var(--border);background:rgba(168,85,247,0.08);color:var(--text-muted);font-family:inherit;font-size:13px;cursor:pointer;transition:all 0.2s}
+.vibe-toggle button.selected{background:linear-gradient(135deg,var(--purple-deep),var(--pink));color:#fff;border-color:transparent}
+.feedback-section textarea,.feedback-section input{width:100%;background:rgba(10,6,24,0.6);border:1px solid var(--border);border-radius:11px;padding:12px;color:var(--text);font-family:inherit;font-size:14px;margin-top:6px}
+.feedback-section textarea{min-height:80px;resize:vertical}
  
-.badge{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:2px 7px;border-radius:6px;margin-bottom:5px}
-.badge.card{background:rgba(192,132,252,0.15);color:#c084fc;border:1px solid rgba(192,132,252,0.3)}
-.badge.journal{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)}
+/* MERCH */
+.merch-section{text-align:center;padding:60px 24px}
+.merch-pills{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+.merch-pill{padding:14px 24px;background:rgba(168,85,247,0.1);border:1px dashed var(--border);border-radius:14px;color:var(--text-muted);font-size:14px;font-weight:600}
  
-.footer{font-size:11px;color:#4b4468;text-align:center;line-height:1.8;margin-top:10px}
+/* FOOTER */
+footer{text-align:center;padding:36px 24px;color:var(--text-dim);font-size:12px;border-top:1px solid var(--border);margin-top:50px}
+footer .footer-logo{display:inline-flex;align-items:center;background:#000;padding:5px 12px;border-radius:9px;border:1.5px solid rgba(192,132,252,0.3);margin-bottom:8px}
+footer .footer-logo .a{color:#fff;font-size:13px;font-weight:900}
+footer .footer-logo .b{color:var(--pink-soft);font-size:13px;font-weight:800;font-style:italic;margin-left:3px}
+footer .footer-logo .c{color:var(--green);font-size:13px;font-weight:900;letter-spacing:1px;margin-left:3px}
  
-/* glow orbs */
-.orb1{position:fixed;top:-100px;right:-100px;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(192,132,252,0.1),transparent 70%);pointer-events:none;z-index:0}
-.orb2{position:fixed;bottom:-100px;left:-100px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(74,222,128,0.08),transparent 70%);pointer-events:none;z-index:0}
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--bg-card-2);border:1px solid var(--green);color:var(--green-soft);padding:13px 22px;border-radius:11px;font-size:14px;z-index:200;display:none;box-shadow:0 8px 22px rgba(0,0,0,0.4);max-width:90vw}
+.toast.visible{display:block;animation:toastIn 0.3s}
+@keyframes toastIn{from{transform:translate(-50%,18px);opacity:0}to{transform:translate(-50%,0);opacity:1}}
+ 
+@media (max-width:600px){
+  .nav-links{gap:10px}
+  .nav-links a:not(.nav-cta){display:none}
+  .section{padding:50px 18px}
+}
 </style>
 </head>
 <body>
  
-<div class="orb1"></div>
-<div class="orb2"></div>
- 
-<!-- LOGO -->
-<div class="logo">
-  <span style="color:#fff">Issa</span>
-  <span style="color:#f9a8d4;font-style:italic;margin-left:2px">Book</span>
-  <span style="color:#4ade80;letter-spacing:1px;margin-left:4px">VIBE</span>
-</div>
-<div class="tagline">Just Vibes, No Pressure</div>
-<div class="subtitle">Read or Listen. Quick Recap or Deep Dive. A log for either Vibe.</div>
- 
-<!-- VIBE CARDS -->
-<div class="section-label">📸 Vibe Cards — Quick Log + Shareable Card</div>
-<div class="cards">
- 
-  <a class="card audio" href="audiobook-log.html">
-    <div class="card-icon">🎧</div>
-    <div class="card-body">
-      <div class="badge card">Vibe Card</div>
-      <div class="card-title">Audiobook Vibe Log</div>
-      <div class="card-desc">Rate your listen, pick your vibes, generate a shareable card. Built for audiobook girlies.</div>
+<nav>
+  <div class="nav-inner">
+    <a href="#top" class="nav-logo">
+      <span class="a">Issa</span>
+      <span class="b">Book</span>
+      <span class="c">VIBE</span>
+    </a>
+    <div class="nav-links">
+      <a href="#apps">Apps</a>
+      <a href="#community">Community</a>
+      <a href="#feedback">Feedback</a>
+      <a href="#apps" class="nav-cta">Try It →</a>
     </div>
-    <div class="card-arrow">→</div>
-  </a>
+  </div>
+</nav>
  
-  <a class="card book" href="general.html">
-    <div class="card-icon">📚</div>
-    <div class="card-body">
-      <div class="badge card" style="background:rgba(74,222,128,0.12);color:#4ade80;border-color:rgba(74,222,128,0.3)">Vibe Card</div>
-      <div class="card-title">Book Vibe Log</div>
-      <div class="card-desc">E-book, paperback, hardcover — log any format and get your vibe card.</div>
+<section class="hero" id="top">
+  <div class="hero-eyebrow">No Pressure, Just Vibes 💜</div>
+  <h1>Log every read.<br>Capture every <span class="accent">vibe</span>.</h1>
+  <p class="hero-sub">A vibe based book logging and journaling system for lovers of Black Authors and Urban Fiction.</p>
+  <div class="hero-cta-row">
+    <a href="#apps" class="btn btn-primary">Your Book Vibe ✨</a>
+    <a href="#community" class="btn btn-secondary">Join the Community</a>
+  </div>
+</section>
+ 
+<section class="app-chooser" id="apps">
+  <div class="section-eyebrow">Choose your vibe</div>
+  <h2 class="section-title">Quick log or full journal? 📚</h2>
+  <p class="section-sub" style="margin-bottom:0">Pick an app to start logging. Logs are quick + shareable. Journals are deep dives saved as PDFs.</p>
+  <div class="app-grid">
+    <a href="audiobook-log.html" class="app-card">
+      <span class="emoji">🎧</span>
+      <span class="label log">Quick Log</span>
+      <h3>Audiobook Log</h3>
+      <p>Quick vibe card with narrator + listening speed. Perfect for sharing.</p>
+    </a>
+    <a href="general.html" class="app-card">
+      <span class="emoji">📖</span>
+      <span class="label log">Quick Log</span>
+      <h3>Book Log</h3>
+      <p>Quick vibe card for ebooks, paperbacks, or hardcovers.</p>
+    </a>
+    <a href="audiobook-journal.html" class="app-card">
+      <span class="emoji">🎙️</span>
+      <span class="label journal">Deep Dive</span>
+      <h3>Audiobook Journal</h3>
+      <p>Full journal with narrator ratings, character vibes, analysis & PDF export.</p>
+    </a>
+    <a href="book-journal.html" class="app-card">
+      <span class="emoji">📓</span>
+      <span class="label journal">Deep Dive</span>
+      <h3>Book Journal</h3>
+      <p>Full reading journal with all the deep-dive details + PDF export.</p>
+    </a>
+  </div>
+</section>
+ 
+<section class="section" id="features">
+  <div class="section-eyebrow">What's in it</div>
+  <h2 class="section-title">Built for how you actually read 📚</h2>
+  <p class="section-sub">No more rating books with a flat 5 stars. Capture the FULL vibe — tropes, characters, narrator energy, the ending tho.</p>
+  <div class="feature-grid">
+    <div class="feature-card"><div class="feature-icon">✨</div><h3>Vibe-First Logging</h3><p>Tag tropes like "Sneaky Links" or "He Fell First." Pick emojis that tell the story. Your taste, your language.</p></div>
+    <div class="feature-card"><div class="feature-icon">🎙️</div><h3>Rate the Narrators</h3><p>Audiobooks live and die by the voice. Type the narrator + rate them per character. Remember who absolutely ate.</p></div>
+    <div class="feature-card"><div class="feature-icon">📲</div><h3>Save & Share</h3><p>Save logs as vibe cards (PNG) or journals as full PDFs. Designed to look good on your feed.</p></div>
+    <div class="feature-card"><div class="feature-icon">💕</div><h3>Treachery Characters</h3><p>Because the secondary cast deserves their flowers too. Add SFC, SMC, and additional key characters in journals.</p></div>
+    <div class="feature-card"><div class="feature-icon">🔓</div><h3>Everything Optional</h3><p>Only have time for the basics? Cool. Wanna log every detail? Also cool. The form bends to YOUR vibe.</p></div>
+    <div class="feature-card"><div class="feature-icon">🌟</div><h3>Free To Use</h3><p>Start logging right now, no signup needed. Saved logs + recommendations coming in the paid tier soon.</p></div>
+  </div>
+</section>
+ 
+<section id="community" style="padding:30px 18px">
+  <div class="community-section">
+    <h2>Join the IssaBookVibe community 💜</h2>
+    <p class="promise">We promise not to spam you ✋🏾</p>
+ 
+    <div class="community-blurb">
+      <p>I created <strong>IssaBookVibe</strong> for the bookish girlies (and guys) that are here for book vibes, chatter, and laughs. A safe space where we can talk books, put each other on, and just enjoy reading without all the extra ish.</p>
+      <p>Whether you're deep into your Bookish Era, trying to get back into reading, or just looking for more books to add to your TBR, there's something for every vibe.</p>
+      <p class="signature">It's giving good books and good vibes, <strong>IssaBookVibe</strong> 💜</p>
+      <a href="https://www.facebook.com/groups/issabookvibe" target="_blank" rel="noopener" class="fb-cta">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Join the IssaBookVibe Facebook Group
+      </a>
     </div>
-    <div class="card-arrow">→</div>
-  </a>
  
-</div>
- 
-<!-- JOURNALS -->
-<div class="section-label">📖 Full Journals — Deep Dive + PDF Download</div>
-<div class="cards">
- 
-  <a class="card audio-journal" href="audiobook-journal.html">
-    <div class="card-icon">🎙️</div>
-    <div class="card-body">
-      <div class="badge journal">Full Journal</div>
-      <div class="card-title">Audiobook Journal</div>
-      <div class="card-desc">The full breakdown — narrators, ratings, trigger warnings, analysis, and more. Downloads as PDF.</div>
+    <div class="signup-divider">
+      <span>Or get on the email list</span>
     </div>
-    <div class="card-arrow">→</div>
-  </a>
  
-  <a class="card book-journal" href="book-journal.html">
-    <div class="card-icon">✍🏾</div>
-    <div class="card-body">
-      <div class="badge journal">Full Journal</div>
-      <div class="card-title">Book Journal</div>
-      <div class="card-desc">Deep dive into your read — characters, analysis, star ratings, and all your thoughts. Downloads as PDF.</div>
-    </div>
-    <div class="card-arrow">→</div>
-  </a>
+    <form class="signup-form" id="communityForm" onsubmit="submitCommunity(event)">
+      <input type="text" name="name" placeholder="Your name" required/>
+      <input type="email" name="email" placeholder="Your email" required/>
+      <input type="text" name="location" placeholder="Where you reading from? (city/state)"/>
+      <div class="field-label">Your book vibe (pick all that apply):</div>
+      <div class="checkbox-row">
+        <label class="checkbox-pill"><input type="checkbox" name="bookVibe" value="Audiobook"/> 🎙️ Audiobook</label>
+        <label class="checkbox-pill"><input type="checkbox" name="bookVibe" value="Ebook"/> 📱 Ebook</label>
+        <label class="checkbox-pill"><input type="checkbox" name="bookVibe" value="Physical"/> 📚 Physical Copy</label>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top:18px;width:100%;justify-content:center">Count Me In ✨</button>
+    </form>
+  </div>
+</section>
  
-</div>
+<section id="feedback" style="padding:30px 18px">
+  <div class="feedback-section">
+    <h2>Help shape what's next 🙌🏾</h2>
+    <p class="sub">Rate each section + drop your thoughts. Your feedback literally builds the next version.</p>
+    <form id="feedbackForm" onsubmit="submitFeedback(event)">
  
-<div class="footer">
-  IssaBookVibe &nbsp;·&nbsp; Made for readers who rate different 📚✨
-</div>
+      <div class="survey-section">
+        <div class="survey-q">⭐ Rate each section (1-5)</div>
+        <div style="display:grid;gap:12px;margin-top:10px">
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">The Emoji Vibes</div>
+            <div class="star-row" data-section="emojiVibes"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">It's Giving (tropes)</div>
+            <div class="star-row" data-section="itsGiving"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">Spice Factor</div>
+            <div class="star-row" data-section="spice"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">Character Vibes (FMC/MMC)</div>
+            <div class="star-row" data-section="characters"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">Treachery Characters (SFC/SMC)</div>
+            <div class="star-row" data-section="treachery"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">Plot & Ending</div>
+            <div class="star-row" data-section="plotEnding"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">Final Vibe Check</div>
+            <div class="star-row" data-section="finalVibe"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+          <div><div style="font-size:13px;color:var(--text-muted);margin-bottom:3px">Save & Share (PNG/PDF)</div>
+            <div class="star-row" data-section="export"><span class="star" data-val="1">★</span><span class="star" data-val="2">★</span><span class="star" data-val="3">★</span><span class="star" data-val="4">★</span><span class="star" data-val="5">★</span></div></div>
+        </div>
+      </div>
  
+      <div class="survey-section">
+        <div class="survey-q">You feeling it or nah?</div>
+        <div class="vibe-toggle" data-toggle="overall">
+          <button type="button" data-val="Loving it">💜 Loving it</button>
+          <button type="button" data-val="Nah, not really">😬 Nah, not really</button>
+        </div>
+      </div>
+ 
+      <div class="survey-section">
+        <div class="survey-q">Would you like more vibes added to the complete vibes list (tropes, themes, topics all in one), or prefer separate vibes lists?</div>
+        <div class="vibe-toggle" data-toggle="vibesList">
+          <button type="button" data-val="All in one list">All in one list</button>
+          <button type="button" data-val="Keep them separate">Keep them separate</button>
+          <button type="button" data-val="Doesn't matter">Doesn't matter to me</button>
+        </div>
+      </div>
+ 
+      <div class="survey-section">
+        <div class="survey-q">For narrators — would you prefer to type the name in yourself, or choose from a pre-built list?</div>
+        <div class="vibe-toggle" data-toggle="narratorPref">
+          <button type="button" data-val="Type it in myself">Type it in myself</button>
+          <button type="button" data-val="Choose from a list">Choose from a list</button>
+          <button type="button" data-val="Either is fine">Either is fine</button>
+        </div>
+      </div>
+ 
+      <div class="survey-section">
+        <div class="survey-q">Any other thoughts? Anything you wish was there? Anything we should cut?</div>
+        <textarea name="comments" placeholder="Drop your thoughts here..."></textarea>
+      </div>
+ 
+      <input type="email" name="email" placeholder="Email (optional, in case we want to follow up)"/>
+ 
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:18px">Send Feedback 💜</button>
+    </form>
+  </div>
+</section>
+ 
+<section class="merch-section">
+  <div class="section-eyebrow">Coming Soon</div>
+  <h2 class="section-title">Merch on the way 👀</h2>
+  <p class="section-sub">Stickers for your laptop, Kindle inserts for your aesthetic. Sign up above to be the first to know.</p>
+  <div class="merch-pills">
+    <div class="merch-pill">📋 Stickers</div>
+    <div class="merch-pill">📖 Kindle Inserts</div>
+    <div class="merch-pill">✨ More Surprises</div>
+  </div>
+</section>
+ 
+<footer>
+  <div class="footer-logo">
+    <span class="a">Issa</span>
+    <span class="b">Book</span>
+    <span class="c">VIBE</span>
+  </div>
+  <div>Built with 💜 in Brooklyn</div>
+  <div style="margin-top:6px;font-size:11px">© 2026 Issa Book Vibe · Anonymous usage data helps us improve the app</div>
+</footer>
+ 
+<div class="toast" id="toast"></div>
+ 
+<script>
+const SHEETS_WEBHOOK_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+ 
+const surveyState = { ratings:{}, toggles:{} };
+ 
+document.querySelectorAll('.star-row').forEach(row=>{
+  const section=row.dataset.section;
+  row.querySelectorAll('.star').forEach(star=>{
+    star.addEventListener('click',()=>{
+      const val=parseInt(star.dataset.val);
+      surveyState.ratings[section]=val;
+      row.querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('active',i<val));
+    });
+  });
+});
+ 
+document.querySelectorAll('.vibe-toggle').forEach(group=>{
+  const key=group.dataset.toggle;
+  group.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      group.querySelectorAll('button').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      surveyState.toggles[key]=btn.dataset.val;
+    });
+  });
+});
+ 
+function submitCommunity(e){
+  e.preventDefault();
+  const fd=new FormData(e.target);
+  const data={
+    timestamp:new Date().toISOString(),
+    name:fd.get('name'),email:fd.get('email'),location:fd.get('location'),
+    bookVibe:fd.getAll('bookVibe').join(', ')
+  };
+  sendToSheets('Community',data);
+  showToast("You're in! Welcome to the vibe 💜");
+  e.target.reset();
+}
+ 
+function submitFeedback(e){
+  e.preventDefault();
+  const fd=new FormData(e.target);
+  const data={
+    timestamp:new Date().toISOString(),
+    ratings:surveyState.ratings,
+    overallVibe:surveyState.toggles.overall||'',
+    vibesListPreference:surveyState.toggles.vibesList||'',
+    narratorPreference:surveyState.toggles.narratorPref||'',
+    comments:fd.get('comments')||'',
+    email:fd.get('email')||''
+  };
+  sendToSheets('Feedback',data);
+  showToast('Got it! Thanks for the feedback 💜');
+  e.target.reset();
+  document.querySelectorAll('.star.active').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.vibe-toggle button.selected').forEach(b=>b.classList.remove('selected'));
+  surveyState.ratings={};surveyState.toggles={};
+}
+ 
+function sendToSheets(tab,data){
+  if(!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.indexOf('PASTE_YOUR')===0){
+    console.log('Sheets webhook not configured. Data:',{tab,data});
+    return;
+  }
+  fetch(SHEETS_WEBHOOK_URL,{
+    method:'POST',mode:'no-cors',
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({tab,data})
+  }).catch(err=>console.error('Sheets send failed:',err));
+}
+ 
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.add('visible');
+  setTimeout(()=>t.classList.remove('visible'),3000);
+}
+</script>
 </body>
 </html>
