@@ -23,7 +23,6 @@ button{cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s}
 ::-webkit-scrollbar-thumb{background:rgba(192,132,252,0.4);border-radius:4px}
 .chip{display:inline-flex;align-items:center;padding:6px 13px;border-radius:20px;border:2px solid #4a4a6a;background:rgba(255,255,255,0.05);color:#c4b5fd;font-size:12px;font-weight:600;cursor:pointer;margin:3px;transition:all 0.18s}
 .chip.on{border-color:#c084fc;background:linear-gradient(135deg,#7e22ce,#be185d);color:#fff;font-weight:700}
-.chip.emoji{font-size:19px;padding:5px 8px;border-radius:10px}
 .slabel{color:#c4b5fd;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-top:16px;margin-bottom:7px;display:block}
 .scard{background:rgba(255,255,255,0.03);border-radius:18px;padding:18px;border:1px solid rgba(192,132,252,0.12);margin-bottom:12px}
 .listopt{padding:10px 15px;border-radius:11px;margin-bottom:5px;cursor:pointer;border:1.5px solid rgba(196,181,253,0.18);color:#c4b5fd;font-size:13px;background:rgba(255,255,255,0.04);transition:all 0.2s}
@@ -40,47 +39,63 @@ button{cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.18s}
 .star-cell.off{filter:saturate(0) opacity(0.25)}
 .star-cell.on{filter:saturate(1)}
 .optional-tag{font-size:10px;color:#6b7280;font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px}
+.add-char-btn{width:100%;padding:13px;border-radius:14px;border:1.5px dashed rgba(196,181,253,0.3);background:transparent;color:#c4b5fd;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif;margin-bottom:9px;transition:all 0.2s}
+.add-char-btn:hover{border-color:#c084fc;color:#e9d5ff}
+.char-card{background:rgba(255,255,255,0.03);border-radius:14px;padding:13px;margin-bottom:10px;border:1px solid rgba(192,132,252,0.18)}
+.char-card.fmc{border-left:3px solid #f9a8d4}
+.char-card.mmc{border-left:3px solid #c084fc}
+.char-card.sfc{border-left:3px solid #fb7185}
+.char-card.smc{border-left:3px solid #818cf8}
+.char-card.add{border-left:3px solid #4ade80}
+.remove-char-btn{float:right;background:transparent;border:none;color:#fca5a5;font-size:16px;cursor:pointer;padding:0;line-height:1}
+.treachery-divider{display:flex;align-items:center;gap:10px;margin:18px 0 12px}
+.treachery-divider .line{flex:1;height:1px;background:rgba(249,168,212,0.25)}
+.treachery-divider .text{color:#f9a8d4;font-size:13px;font-weight:700;font-style:italic;font-family:'DM Sans',sans-serif}
+.privacy-note{text-align:center;color:#6b7280;font-size:10px;margin-top:24px;padding:12px;line-height:1.5;font-family:'DM Sans',sans-serif}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-// ── DATA ──────────────────────────────────────────────────────────
+const SHEETS_WEBHOOK_URL = 'PASTE_YOUR_WEB_APP_URL_HERE';
+ 
 const DATA={
-  authorVibes:['New To Me','Still On The Fence','Enjoy Their Work','One of My Faves'],
-  format:['E-Book','Paperback','Hardcover','Other'],
-  source:['Kindle/Kindle Unlimited','Bookstore','Library/Libby/Hoopla','Other'],
+  authorVibes:['New To Me','Still On The Fence','Enjoy Their Work','One of My Faves','Not My Vibe'],
+  format:['E-Book','Paperback','Audiobook','Hardcover','Other'],
   pov:['First Person','Third Person','Both'],
-  itsGiving:['Love of My Life','Can We Be Lovers & Friends','Twin Flames/Soul Ties','We Belong Together','If Spinning The Block Was A Couple','Torn Between The Two','Toxic AF','Sneaky Links/Secret Lovers','#RelationshipGoals','Certified Freaks','In Love With Another Man/Woman','Good Girl/Daddy Dynamic','Travel/Vacation/Getaway','Revenge/Lick Back','Half On A Baby, Surprise','Never Playing About You','Soft Life/Life of Luxury','Millenial Coded/Nostalgic','Work Baes','Sleeping with The Enemy','For the Grown & Sexy','Money, Power, & Respect','03 Bonnie & Clyde','I Fell for My Best Friend/Ex Sibling','The Boy Is Mine','Everything You Own in a Box to The Left','Take Love Slowly',"If Loving You is Wrong, I Don't Wanna Be Right",'Locked & Loaded','Fake Love, Do It for The Gram','Why You So Obsessed with Me'],
+  itsGiving:['Can We Be Lovers & Friends','Twin Flames/Soul Ties','They Belong Together Fr','If Spinning The Block Was A Couple','Torn Between The Two','Toxic AF','Sneaky Links/Secret Lovers','#RelationshipGoals','Certified Freaks','In Love With Another Man/Woman','Good Girl/Daddy Dynamic','Travel/Vacation/Getaway','Revenge/Lick Back','Half On A Baby, Surprise','Never Playing About You','Soft Life/Life of Luxury','Millenial Coded/Nostalgic','Work Baes','Sleeping with The Enemy','For the Grown & Sexy','Money, Power, & Respect','03 Bonnie & Clyde','I Fell for My Best Friend/Ex Sibling','The Boy Is Mine','Everything You Own in a Box to The Left','Take Love Slowly',"If Loving You is Wrong, I Don't Wanna Be Right",'Locked & Loaded','Fake Love, Do It for The Gram','Why You So Obsessed with Me',"Age Ain't Nothing But A Number",'You, Me, and Them/Why Choose','Sweetest Taboo','A Tyler Perry/Tubi Movie','He Fell First'],
   triggerWarnings:['Domestic Violence/Abuse','Sexual Assault/Rape','Addiction/Substance Abuse','Suicide/Self Harm','Mental Illness/Disorders','Disability/Sickness','Miscarriage/Infertility','Loss/Grief','Societal Issues','Graphic Details','Tragedy/Death','Other','N/A'],
-  fmcVibes:['Material Girl/Bad & Boujee','Totally Relatable','Career Driven/Boss Babe','Quirky/Socially Awkward/Neurodivergent',"Little Miss Independent/I Don't Need a Man",'Lover Girl/Hopeless Romantic','Girl Next Door/Average/Sweetheart','Friend In My Head/Girls-Girl','Big Main Character Energy','Good Girl Gone Bad/Villain Era','She IS The DRAMA','A Little Delulu/Cray Cray','Not Likable/Annoying AF',"A Hot Mess but I'ma Stick Beside Her",'Other'],
-  mmcVibes:["He's A Good Man Savannah",'BDE/Major Zaddy Vibes','Certified Bookbae/My Type','He Got Money/Big Boss Energy','Unhinged And I Like It','Walking Red Flag/Fuck Boy','Quirky/Socially Awkward/Neurodivergent','Nonchalant/Chill/Laidback','Blunt/DGAF/No Filter','Corny AF/Lame',"Doesn't Do It for Me/Not Likable",'Other'],
+  fmcVibes:['Material Girl/Bad & Boujee/Rich Auntie','Totally Relatable','Career Driven/Boss Babe','Quirky/Socially Awkward/Neurodivergent',"Little Miss Independent/I Don't Need a Man",'Lover Girl/Hopeless Romantic','Girl Next Door/Sweetheart','Average/Basic','Friend In My Head/Girls-Girl','Big Main Character Energy','Good Girl Gone Bad/Villain Era','She IS The DRAMA','A Little Delulu/Cray Cray','She About That Life','Not Likable/Annoying AF','Mean Girl','A Hoe Lotta Fun',"A Hot Mess but I'ma Stick Beside Her",'Blunt/DGAF/No Filter','Other'],
+  sfcVibes:['Material Girl/Bad & Boujee/Rich Auntie','Totally Relatable','Career Driven/Boss Babe','Quirky/Socially Awkward/Neurodivergent',"Little Miss Independent/I Don't Need a Man",'Lover Girl/Hopeless Romantic','Girl Next Door/Sweetheart','Average/Basic','Friend In My Head/Girls-Girl','Big Main Character Energy','Good Girl Gone Bad/Villain Era','She IS The DRAMA','A Little Delulu/Cray Cray','She About That Life','Not Likable/Annoying AF','Mean Girl','A Hoe Lotta Fun',"A Hot Mess but I'ma Stick Beside Her",'Blunt/DGAF/No Filter','The Perfect Bestie/Partner in Crime','Cousin Faith Energy/Frenemy','Hater/Cockblocker','Other'],
+  mmcVibes:["He's A Good Man Savannah",'BDE/Major Zaddy Vibes','Certified Bookbae/My Type IRL','He Got Money/Big Boss Energy','Unhinged And I Like It','Walking Red Flag/Fuck Boy','Quirky/Socially Awkward/Neurodivergent','Nonchalant/Chill/Laidback','Romantic/Loverboy','Mr. Steal Your Girl','Blunt/DGAF/No Filter','Corny AF/Lame',"Doesn't Do It for Me/Not Likable",'Other'],
+  smcVibes:["He's A Good Man Savannah",'BDE/Major Zaddy Vibes','Certified Bookbae/My Type IRL','He Got Money/Big Boss Energy','Unhinged And I Like It','Walking Red Flag/Fuck Boy','Quirky/Socially Awkward/Neurodivergent','Nonchalant/Chill/Laidback','Romantic/Loverboy','Mr. Steal Your Girl','Blunt/DGAF/No Filter','Corny AF/Lame',"Doesn't Do It for Me/Not Likable",'Perfect Wingman/Partner in Crime','Hater/Cockblocker','Other'],
   spice:['🚪 Closed-Door Romance','🫦 Flirty and Sweet','🤤 A Little Drool Worthy','🌶️ Spicy AF','💦 NSFW (Not Safe For Work)','🥵 Complete Smut No Plot'],
-  plotHadMe:['IKYFL','I Was Rooting For You','Ooop','Biitttch',"I Know That's Right","I Can't",'That Escalated Quickly',"Don't Piss Me Off",'Clutching My Pearls','Gagged','Is The Plot In the Room With Us?','This is The Scheme That Todd Set-up'],
-  thatEnding:['Cliffhanger','Felt Rushed','It Was Perfect','Had Me Wanting More',"It Was Aight, Could've Been Better",'WTF Was That','I Could Have Had a V8'],
-  theFeels:['😊','🥰','😍','😆','🤣','😏','😬','😅','🤭','🫣','😒','🙄','🤔','🤨','😑','🫠','🥴','😳','😮','🫨','🤯','😠','🤬','😤','😕','😔','😫','😭','🥹','😢','💔','😰','😱','😮\u200d💨','🥱','🎢'],
+  plotHadMe:['IKYFL','I Was Rooting For You','Ooop','Biitttch',"I Know That's Right","I Can't",'That Escalated Quickly',"Don't Piss Me Off",'Clutching My Pearls','Gagged','Is The Plot In the Room With Us?','This is The Scheme That Todd Set-up','Not Me Crying','I Have No Words','Clock That Tea'],
+  thatEnding:['Cliffhanger','Felt Rushed','It Works','Happily Ever After or Whatever','Had Me Wanting More',"It Was Aight, Could've Been Better",'WTF Was That','I Could Have Had a V8'],
   finalVibe:['Not My Vibe','DNF (Did Not Finish)','Almost DNF','Hated It','Overhyped','It Was OK','I Enjoyed It',"I Couldn't Get Enough",'Loved It','Top 10 Favorite List','Favorite Book Of All Time','Would Not Recommend','Would Totally Recommend','Memorable','Not Very Memorable','Realistic/Relatable','Unrealistic/Unrelatable','Totally My Vibe']
 };
-
+ 
 const STEPS=['📖 The Book',"✨ It's Giving",'👥 Characters','💬 The Verdict'];
-
+ 
 let S={
   step:0, view:'form',
   title:'', author:'', coverDataUrl:'',
-  authorVibe:'', format:'', source:'',
+  authorVibe:'', format:'',
   dateStart:'', dateEnd:'', length:'', series:'', pov:'', setting:'', premise:'',
   vibeEmojis:'',
   itsGiving:[], themeSong:'', memeDataUrl:'', triggerWarnings:[], gagMoment:'',
-  fmcName:'', fmcVibe:[],
-  mmcName:'', mmcVibe:[],
-  secondaryChars:'',
+  fmcAdded:false, fmcName:'', fmcAbout:'', fmcVibe:[],
+  mmcAdded:false, mmcName:'', mmcAbout:'', mmcVibe:[],
+  sfcAdded:false, sfcName:'', sfcAbout:'', sfcVibe:[],
+  smcAdded:false, smcName:'', smcAbout:'', smcVibe:[],
+  addAdded:false, addCharText:'',
   spice:'', plotHadMe:'', thatEnding:'',
   overview:'', qtna:'',
   starWriting:0, starPace:0, starCharDev:0, starUniverse:0, starEase:0, starOverall:0,
-  theFeels:[], finalVibe:[], readingVibe:''
+  finalVibe:[], readingVibe:''
 };
 window.S=S;
-
+ 
 function upd(){render()}
 function toggle1(k,v){S[k]=S[k]===v?'':v;upd()}
 function toggleN(k,v,max){
@@ -90,12 +105,21 @@ function toggleN(k,v,max){
   upd();
 }
 function setStar(k,v){S[k]=S[k]===v?0:v;upd()}
+function addChar(key){S[key+'Added']=true;upd()}
+function removeChar(key){
+  S[key+'Added']=false;
+  S[key+'Name']='';S[key+'About']='';S[key+'Vibe']=[];
+  upd();
+}
+function addAddtl(){S.addAdded=true;upd()}
+function removeAddtl(){S.addAdded=false;S.addCharText='';upd()}
 window.toggle1=toggle1;window.toggleN=toggleN;window.setStar=setStar;
-
+window.addChar=addChar;window.removeChar=removeChar;window.addAddtl=addAddtl;window.removeAddtl=removeAddtl;
+ 
 function esc(s){return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'&quot;')}
 function lbl(t,opt){return `<span class="slabel">${t}${opt?`<span class="optional-tag">(optional)</span>`:''}</span>`}
 function count(k,max){return `<div style="font-size:11px;color:#9ca3af;margin-bottom:7px">${S[k].length}/${max} selected</div>`}
-
+ 
 function handleCover(input){
   const file=input.files[0]; if(!file)return;
   const reader=new FileReader();
@@ -108,9 +132,8 @@ function handleMeme(input){
   reader.onload=e=>{S.memeDataUrl=e.target.result;upd()};
   reader.readAsDataURL(file);
 }
-window.handleCover=handleCover;
-window.handleMeme=handleMeme;
-
+window.handleCover=handleCover;window.handleMeme=handleMeme;
+ 
 function chipSet(k,opts,max){
   return `<div style="display:flex;flex-wrap:wrap">${opts.map(o=>{
     const on=Array.isArray(S[k])?S[k].includes(o):S[k]===o;
@@ -132,7 +155,40 @@ function inp(k,placeholder,multiline=false,rows=2){
   if(multiline) return `<textarea placeholder="${placeholder}" oninput="S['${k}']=this.value" rows="${rows}">${S[k]||''}</textarea>`;
   return `<input type="text" placeholder="${placeholder}" value="${esc(S[k]||'')}" oninput="S['${k}']=this.value"/>`;
 }
-
+ 
+// ── CHARACTER CARDS (NO narrator for book journal) ────────────────
+function charCard(key, label, color, vibesList, cardClass){
+  if(!S[key+'Added']){
+    return `<button class="add-char-btn" onclick="addChar('${key}')">+ Add ${label}</button>`;
+  }
+  return `<div class="char-card ${cardClass}">
+    <div class="char-head" style="background:${color}1a;border:1px solid ${color}40;color:${color};margin:0 0 12px">
+      ${label}
+      <button class="remove-char-btn" onclick="removeChar('${key}')">✕</button>
+    </div>
+    ${lbl(`${label} Name`,true)}
+    <input type="text" placeholder="Character name" value="${esc(S[key+'Name']||'')}" oninput="S['${key}Name']=this.value"/>
+    ${lbl(`About ${label}`,true)}
+    <textarea placeholder="About The Character ie age, occupation, and etc" oninput="S['${key}About']=this.value" rows="2">${S[key+'About']||''}</textarea>
+    ${lbl(`${label} Vibe (up to 3)`)}${count(key+'Vibe',3)}
+    ${chipSet(key+'Vibe',vibesList,3)}
+  </div>`;
+}
+ 
+function additionalCharCard(){
+  if(!S.addAdded){
+    return `<button class="add-char-btn" onclick="addAddtl()">+ Add Additional Key Characters</button>`;
+  }
+  return `<div class="char-card add">
+    <div class="char-head" style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.4);color:#4ade80;margin:0 0 12px">
+      Additional Key Characters
+      <button class="remove-char-btn" onclick="removeAddtl()">✕</button>
+    </div>
+    ${lbl('List any additional characters and their roles',true)}
+    <textarea placeholder="List any other characters worth mentioning and their role in the story" oninput="S.addCharText=this.value" rows="4">${S.addCharText||''}</textarea>
+  </div>`;
+}
+ 
 // ── STEPS ─────────────────────────────────────────────────────────
 function stepHTML(){
   if(S.step===0) return `
@@ -140,7 +196,6 @@ function stepHTML(){
     ${lbl('Author *')}${inp('author','Who wrote it?')}
     ${lbl('Author Vibes (choose 1)')}${chipSet('authorVibe',DATA.authorVibes)}
     ${lbl('Format (choose 1)')}${chipSet('format',DATA.format)}
-    ${lbl('Source (choose 1)')}${chipSet('source',DATA.source)}
     ${lbl('Book Cover',true)}
     ${S.coverDataUrl?`<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
       <img src="${S.coverDataUrl}" style="width:55px;height:75px;object-fit:cover;border-radius:8px;border:2px solid rgba(192,132,252,0.4)"/>
@@ -150,14 +205,14 @@ function stepHTML(){
     ${lbl('Date Started *')}<input type="date" value="${S.dateStart||''}" onchange="S.dateStart=this.value;upd()" style="color:${S.dateStart?'#f3e8ff':'#6b7280'}"/>
     ${lbl('Date Finished',true)}<input type="date" value="${S.dateEnd||''}" onchange="S.dateEnd=this.value;upd()" style="color:${S.dateEnd?'#f3e8ff':'#6b7280'}"/>
     <div style="font-size:11px;color:#6b7280;margin-top:4px">Leave blank if you haven't finished yet</div>
-    ${lbl('Length (pages) *')}${inp('length','How many pages?')}
+    ${lbl('Length (pages) *')}${inp('length','e.g. 320 pages')}
     ${lbl('Series *')}${inp('series','Series name & book number, or N/A')}
     ${lbl('POV (choose 1)')}${selOpts('pov',DATA.pov,'Select POV...')}
     ${lbl('Setting *')}${inp('setting','Main location / time period')}
     ${lbl('Premise / Blurb *')}${inp('premise','The rundown — spoil it or keep it cute',true,3)}
-    ${lbl('Emojis That Represent The Overall Vibe (up to 3)')}
-    <input type="text" placeholder="Type or paste up to 3 emojis ✨🔥💀" value="${esc(S.vibeEmojis||'')}" oninput="S.vibeEmojis=this.value" style="font-size:22px;letter-spacing:6px"/>`;
-
+    ${lbl('The Emoji Vibes (up to 5)')}
+    <input type="text" placeholder="Input up to 5 Emojis That Represent The Overall Vibe" value="${esc(S.vibeEmojis||'')}" oninput="S.vibeEmojis=this.value" style="font-size:22px;letter-spacing:6px"/>`;
+ 
   if(S.step===1) return `
     ${lbl("It's Giving... (up to 5)")}${count('itsGiving',5)}${chipSet('itsGiving',DATA.itsGiving,5)}
     ${lbl('Spice Factor (choose 1)')}${listOpts('spice',DATA.spice,'spice')}
@@ -170,25 +225,23 @@ function stepHTML(){
     </div>`:''}
     <input type="file" accept="image/*" onchange="handleMeme(this)"/>
     ${lbl('Most Gag-Worthy Moment / Favorite Quotes',true)}${inp('gagMoment','The moment you had to put the book down',true,3)}`;
-
+ 
   if(S.step===2) return `
-    <div class="char-head" style="background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.25);color:#f9a8d4">She's That Girl — FMC</div>
-    ${lbl('FMC Name / Age / Occupation *')}${inp('fmcName','e.g. Maya, 28, ER Nurse')}
-    ${lbl('FMC Vibe (up to 3)')}${count('fmcVibe',3)}${chipSet('fmcVibe',DATA.fmcVibes,3)}
-
-    <div class="char-head" style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.25);color:#c084fc;margin-top:8px">He's That Dude — MMC</div>
-    ${lbl('MMC Name / Age / Occupation *')}${inp('mmcName','e.g. Damien, 32, CEO / Menace')}
-    ${lbl('MMC Vibe (up to 3)')}${count('mmcVibe',3)}${chipSet('mmcVibe',DATA.mmcVibes,3)}
-
-    <div style="margin-top:16px">${lbl('Secondary Characters',true)}${inp('secondaryChars','List character names and their role in the story',true,3)}</div>`;
-
-  if(S.step===3) return `
-    ${lbl('The Plot Had Me Like... (choose 1)')}${chipSet('plotHadMe',DATA.plotHadMe)}
-    <div style="margin-top:14px">${lbl('That Ending Tho... (choose 1)')}${listOpts('thatEnding',DATA.thatEnding,'ending')}</div>
-    <div style="margin-top:14px">
-      ${lbl('The Feels... (up to 3)')}${count('theFeels',3)}
-      <div style="display:flex;flex-wrap:wrap;gap:3px">${DATA.theFeels.map(e=>`<span class="chip emoji ${S.theFeels.includes(e)?'on':''}" onclick="toggleN('theFeels','${e}',3)">${e}</span>`).join('')}</div>
+    ${charCard('fmc',"Female Main Character",'#f9a8d4',DATA.fmcVibes,'fmc')}
+    ${charCard('mmc',"Male Main Character",'#c084fc',DATA.mmcVibes,'mmc')}
+    <div class="treachery-divider">
+      <div class="line"></div>
+      <div class="text">Treachery Characters</div>
+      <div class="line"></div>
     </div>
+    ${charCard('sfc',"Secondary Female Character",'#fb7185',DATA.sfcVibes,'sfc')}
+    ${charCard('smc',"Secondary Male Character",'#818cf8',DATA.smcVibes,'smc')}
+    ${additionalCharCard()}`;
+ 
+  if(S.step===3) return `
+    ${lbl('The Plot Had Me Like... (choose 1)')}
+    ${chipSet('plotHadMe',DATA.plotHadMe)}
+    <div style="margin-top:14px">${lbl('That Ending Tho... (choose 1)')}${listOpts('thatEnding',DATA.thatEnding,'ending')}</div>
     <div style="margin-top:14px">
       ${lbl('Analysis ⭐ (tap to rate)')}
       <table class="star-table">
@@ -205,13 +258,13 @@ function stepHTML(){
     </div>
     <div style="margin-top:14px">${lbl('Overview / Takeaway',true)}${inp('overview','Say what you gotta say, bestie',true,3)}</div>
     <div style="margin-top:14px">${lbl("QTNA's / Comments",true)}${inp('qtna','Questions that need answers… or just unhinged thoughts',true,2)}</div>
-    <div style="margin-top:14px">${lbl('What Was Your Reading Vibe?',true)}${inp('readingVibe','Cozy in bed? At a coffee shop? Crying on the train?')}</div>
+    <div style="margin-top:14px">${lbl('What Was Your Reading Vibe?',true)}${inp('readingVibe','In bed? On the beach? Crying in the bathtub?')}</div>
     <div style="margin-top:14px">
       ${lbl('Final Vibe Check (up to 3)')}${count('finalVibe',3)}
       ${DATA.finalVibe.map(v=>`<div class="listopt fvc ${S.finalVibe.includes(v)?'on':''}" onclick="toggleN('finalVibe','${esc(v)}',3)">${v}</div>`).join('')}
     </div>`;
 }
-
+ 
 // ── PDF JOURNAL PAGE ──────────────────────────────────────────────
 function journalPage(){
   const ve=S.vibeEmojis||'';
@@ -242,10 +295,18 @@ function journalPage(){
       <span style="font-size:14px">${'⭐'.repeat(val)}</span>
     </div>`:'';
   }
-
+  function charBlock(key, label, color, bg) {
+    if(!S[key+'Added']) return '';
+    return `<div style="background:${bg};border:1px solid ${color}33;border-radius:12px;padding:11px;margin-bottom:10px">
+      <div style="color:${color};font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'DM Sans',sans-serif">${label}</div>
+      ${S[key+'Name']?`<div style="color:#f3e8ff;font-size:13px;font-weight:700;margin-bottom:4px;font-family:'DM Sans',sans-serif">${S[key+'Name']}</div>`:''}
+      ${S[key+'About']?`<div style="color:#c4b5fd;font-size:11px;margin-bottom:6px;font-family:'DM Sans',sans-serif;line-height:1.5">${S[key+'About']}</div>`:''}
+      ${S[key+'Vibe'].length?`<div>${tags(S[key+'Vibe'],color,bg)}</div>`:''}
+    </div>`;
+  }
+ 
   return `<div id="journalPage" style="background:linear-gradient(160deg,#0f0a1e,#1a0533 50%,#0d1a0d);max-width:480px;margin:0 auto;padding:28px 22px;border-radius:20px;border:1px solid rgba(192,132,252,0.2)">
-
-    <!-- HEADER -->
+ 
     <div style="text-align:center;margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid rgba(192,132,252,0.2)">
       <div style="display:inline-flex;align-items:center;background:#000;padding:5px 12px;border-radius:9px;border:1.5px solid rgba(192,132,252,0.35);margin-bottom:8px">
         <span style="color:#fff;font-size:13px;font-weight:900;font-family:'DM Sans',sans-serif">Issa</span>
@@ -253,8 +314,7 @@ function journalPage(){
         <span style="color:#4ade80;font-size:13px;font-weight:900;letter-spacing:1px;margin-left:3px;font-family:'DM Sans',sans-serif">VIBE</span>
       </div>
       <div style="font-size:8px;color:#a78bfa;letter-spacing:4px;text-transform:uppercase;margin-bottom:14px;font-family:'DM Sans',sans-serif">book journal</div>
-
-      <!-- Title + Cover -->
+ 
       <div style="display:flex;gap:14px;align-items:flex-start;text-align:left">
         <div style="width:70px;height:95px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,#7e22ce,#be185d);display:flex;align-items:center;justify-content:center;overflow:hidden;border:2px solid rgba(192,132,252,0.4);box-shadow:3px 3px 14px rgba(0,0,0,0.5)">
           ${S.coverDataUrl?`<img src="${S.coverDataUrl}" style="width:100%;height:100%;object-fit:cover"/>`:'<span style="font-size:22px">📚</span>'}
@@ -265,18 +325,16 @@ function journalPage(){
           <div style="display:flex;flex-wrap:wrap;gap:5px">
             ${S.authorVibe?`<span style="background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.35);color:#4ade80;border-radius:8px;padding:2px 9px;font-size:10px;font-weight:700;font-family:'DM Sans',sans-serif">${S.authorVibe}</span>`:''}
             ${S.format?`<span style="background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.3);color:#a78bfa;border-radius:8px;padding:2px 9px;font-size:10px;font-family:'DM Sans',sans-serif">📖 ${S.format}</span>`:''}
-            ${S.source?`<span style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.2);color:#a78bfa;border-radius:8px;padding:2px 9px;font-size:10px;font-family:'DM Sans',sans-serif">${S.source}</span>`:''}
           </div>
           ${ve?`<div style="font-size:22px;margin-top:8px;letter-spacing:6px">${ve}</div>`:''}
         </div>
       </div>
     </div>
-
-    <!-- BOOK DETAILS -->
-    ${sec('📖 Book Details','#c084fc',
+ 
+    ${sec('📚 Book Details','#c084fc',
       row('Date Started',S.dateStart)+
       row('Date Finished',S.dateEnd||'In Progress...')+
-      row('Length',S.length?S.length+' pages':'')+
+      row('Length',S.length)+
       row('Series',S.series)+
       row('POV',S.pov)+
       row('Setting',S.setting)+
@@ -285,8 +343,7 @@ function journalPage(){
         <div style="color:#e9d5ff;font-size:12px;font-family:'DM Sans',sans-serif;line-height:1.6">${S.premise}</div>
       </div>`:'')
     )}
-
-    <!-- IT'S GIVING -->
+ 
     ${sec("✨ It's Giving...",'#f9a8d4',
       (S.itsGiving.length?`<div style="margin-bottom:10px">${tags(S.itsGiving,'#f9a8d4','rgba(249,168,212,0.09)')}</div>`:'')+
       (S.spice?`<div style="background:rgba(239,68,68,0.09);border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:9px 13px;margin-bottom:10px;display:flex;align-items:center;gap:8px">
@@ -304,26 +361,18 @@ function journalPage(){
         <div style="color:#e9d5ff;font-size:12px;font-family:'DM Sans',sans-serif;line-height:1.6">${S.gagMoment}</div>
       </div>`:'')||'-'
     )}
-
-    <!-- CHARACTERS -->
+ 
     ${sec('👥 The Characters','#4ade80',
-      (S.fmcName?`<div style="background:rgba(236,72,153,0.07);border:1px solid rgba(236,72,153,0.2);border-radius:12px;padding:11px;margin-bottom:10px">
-        <div style="color:#f9a8d4;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'DM Sans',sans-serif">She's That Girl</div>
-        <div style="color:#f3e8ff;font-size:13px;font-weight:700;margin-bottom:6px;font-family:'DM Sans',sans-serif">${S.fmcName}</div>
-        ${S.fmcVibe.length?`<div>${tags(S.fmcVibe,'#f9a8d4','rgba(236,72,153,0.09)')}</div>`:''}
-      </div>`:'')+
-      (S.mmcName?`<div style="background:rgba(124,58,237,0.07);border:1px solid rgba(124,58,237,0.2);border-radius:12px;padding:11px;margin-bottom:10px">
-        <div style="color:#c084fc;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'DM Sans',sans-serif">He's That Dude</div>
-        <div style="color:#f3e8ff;font-size:13px;font-weight:700;margin-bottom:6px;font-family:'DM Sans',sans-serif">${S.mmcName}</div>
-        ${S.mmcVibe.length?`<div>${tags(S.mmcVibe,'#c084fc','rgba(124,58,237,0.09)')}</div>`:''}
-      </div>`:'')+
-      (S.secondaryChars?`<div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.18);border-radius:12px;padding:11px">
-        <div style="color:#4ade80;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'DM Sans',sans-serif">Secondary Characters</div>
-        <div style="color:#e9d5ff;font-size:12px;font-family:'DM Sans',sans-serif;line-height:1.6">${S.secondaryChars}</div>
+      charBlock('fmc',"She's That Girl",'#f9a8d4','rgba(236,72,153,0.07)')+
+      charBlock('mmc',"He's That Dude",'#c084fc','rgba(124,58,237,0.07)')+
+      charBlock('sfc',"Treachery: SFC",'#fb7185','rgba(251,113,133,0.07)')+
+      charBlock('smc',"Treachery: SMC",'#818cf8','rgba(129,140,248,0.07)')+
+      (S.addAdded&&S.addCharText?`<div style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.25);border-radius:12px;padding:11px;margin-bottom:10px">
+        <div style="color:#4ade80;font-size:9px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;font-family:'DM Sans',sans-serif">Additional Key Characters</div>
+        <div style="color:#e9d5ff;font-size:12px;font-family:'DM Sans',sans-serif;line-height:1.6">${S.addCharText}</div>
       </div>`:'')||'-'
     )}
-
-    <!-- THE VERDICT -->
+ 
     ${sec('💬 The Verdict','#fbbf24',
       (S.plotHadMe?`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
         <div style="background:rgba(255,255,255,0.04);border-radius:9px;padding:9px;text-align:center">
@@ -334,10 +383,6 @@ function journalPage(){
           <div style="color:#9ca3af;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;font-family:'DM Sans',sans-serif">That Ending Tho...</div>
           <div style="color:#e9d5ff;font-size:12px;font-weight:700;font-family:'DM Sans',sans-serif">${S.thatEnding}</div>
         </div>`:''}
-      </div>`:'')+
-      (S.theFeels.length?`<div style="text-align:center;margin-bottom:12px">
-        <div style="color:#9ca3af;font-size:9px;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px;font-family:'DM Sans',sans-serif">The Feels...</div>
-        <div style="font-size:28px;letter-spacing:8px">${S.theFeels.join('')}</div>
       </div>`:'')+
       ((S.starWriting||S.starPace||S.starCharDev||S.starUniverse||S.starEase||S.starOverall)?`<div style="margin-bottom:12px;background:rgba(255,255,255,0.03);border-radius:10px;padding:12px">
         <div style="color:#fbbf24;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:8px;font-family:'DM Sans',sans-serif">⭐ Analysis</div>
@@ -367,8 +412,37 @@ function journalPage(){
     )}
   </div>`;
 }
-
-// ── SAVE AS PDF ───────────────────────────────────────────────────
+ 
+function sendToSheets(){
+  if(!SHEETS_WEBHOOK_URL || SHEETS_WEBHOOK_URL.indexOf('PASTE_YOUR')===0) return;
+  const payload = {
+    tab: 'Journals',
+    data: {
+      timestamp: new Date().toISOString(),
+      source: 'book-journal',
+      title: S.title, author: S.author,
+      authorVibe: S.authorVibe, format: S.format,
+      dateStart: S.dateStart, dateEnd: S.dateEnd, length: S.length, series: S.series,
+      pov: S.pov, setting: S.setting, premise: S.premise,
+      vibeEmojis: S.vibeEmojis,
+      itsGiving: S.itsGiving, spice: S.spice,
+      triggerWarnings: S.triggerWarnings, themeSong: S.themeSong, gagMoment: S.gagMoment,
+      fmc:{added:S.fmcAdded,name:S.fmcName,about:S.fmcAbout,vibe:S.fmcVibe},
+      mmc:{added:S.mmcAdded,name:S.mmcName,about:S.mmcAbout,vibe:S.mmcVibe},
+      sfc:{added:S.sfcAdded,name:S.sfcName,about:S.sfcAbout,vibe:S.sfcVibe},
+      smc:{added:S.smcAdded,name:S.smcName,about:S.smcAbout,vibe:S.smcVibe},
+      additionalChars: S.addAdded?S.addCharText:'',
+      plotHadMe: S.plotHadMe, thatEnding: S.thatEnding,
+      analysis:{writing:S.starWriting,pace:S.starPace,charDev:S.starCharDev,universe:S.starUniverse,ease:S.starEase,overall:S.starOverall},
+      overview: S.overview, qtna: S.qtna, readingVibe: S.readingVibe,
+      finalVibe: S.finalVibe
+    }
+  };
+  try{
+    fetch(SHEETS_WEBHOOK_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}).catch(()=>{});
+  }catch(e){}
+}
+ 
 function saveJournal(){
   const el=document.getElementById('journalPage');
   if(!el){alert('Generate the journal first!');return;}
@@ -392,8 +466,7 @@ function saveJournal(){
   }).catch(()=>{btn.textContent='📄 Save as PDF';btn.disabled=false;alert('Could not save — try a screenshot!');});
 }
 window.saveJournal=saveJournal;
-
-// ── RENDER ────────────────────────────────────────────────────────
+ 
 function render(){
   const header=`<div style="background:linear-gradient(90deg,#12042a,#081208);padding:13px 24px;border-bottom:1px solid rgba(192,132,252,0.18);text-align:center;position:sticky;top:0;z-index:10;backdrop-filter:blur(12px)">
     <div style="display:inline-flex;align-items:center;background:#000;padding:5px 12px;border-radius:9px;border:1.5px solid rgba(192,132,252,0.3)">
@@ -403,23 +476,25 @@ function render(){
     </div>
     <div style="font-size:8px;color:#a78bfa;letter-spacing:4px;text-transform:uppercase;margin-top:3px;font-family:'DM Sans',sans-serif">book journal</div>
   </div>`;
-
+ 
   let body='';
   if(S.view==='form'){
     const pills=STEPS.map((s,i)=>`<button onclick="S.step=${i};render()" style="flex-shrink:0;padding:7px 13px;border-radius:20px;border:none;font-family:'DM Sans',sans-serif;background:${i===S.step?'linear-gradient(135deg,#7e22ce,#be185d)':i<S.step?'rgba(74,222,128,0.17)':'rgba(255,255,255,0.06)'};color:${i===S.step?'#fff':i<S.step?'#4ade80':'#9ca3af'};font-size:11px;font-weight:${i===S.step?800:600}">${i<S.step?'✓ ':''}${s}</button>`).join('');
     const prev=S.step>0?`<button onclick="S.step--;render()" style="flex:1;padding:13px;border-radius:14px;border:1.5px solid rgba(196,181,253,0.3);background:transparent;color:#c4b5fd;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif">← Back</button>`:'';
     const next=S.step<STEPS.length-1
       ?`<button onclick="S.step++;render()" style="flex:2;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#7e22ce,#be185d);color:#fff;font-size:14px;font-weight:800;font-family:'DM Sans',sans-serif">Next: ${STEPS[S.step+1]} →</button>`
-      :`<button onclick="S.view='result';render()" style="flex:2;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#15803d,#7e22ce);color:#fff;font-size:14px;font-weight:800;font-family:'DM Sans',sans-serif;box-shadow:0 0 20px rgba(74,222,128,0.28)">✨ Generate My Journal ✨</button>`;
+      :`<button onclick="S.view='result';sendToSheets();render()" style="flex:2;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#15803d,#7e22ce);color:#fff;font-size:14px;font-weight:800;font-family:'DM Sans',sans-serif;box-shadow:0 0 20px rgba(74,222,128,0.28)">✨ Generate My Journal ✨</button>`;
     body=`
       <div style="display:flex;gap:5px;margin-bottom:18px;overflow-x:auto;padding-bottom:4px">${pills}</div>
       <div class="scard">${stepHTML()}</div>
-      <div style="display:flex;gap:10px">${prev}${next}</div>`;
+      <div style="display:flex;gap:10px">${prev}${next}</div>
+      <div class="privacy-note">Anonymous usage data helps us improve the app 💜</div>`;
   } else {
     body=`
       ${journalPage()}
       <button id="savePdfBtn" onclick="saveJournal()" style="width:100%;margin-top:14px;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#1d4ed8,#7e22ce);color:#fff;font-size:14px;font-weight:800;font-family:'DM Sans',sans-serif;box-shadow:0 0 18px rgba(99,102,241,0.3)">📄 Save as PDF</button>
-      <button onclick="S.view='form';S.step=0;render()" style="width:100%;margin-top:8px;padding:13px;border-radius:14px;border:1.5px solid rgba(196,181,253,0.3);background:transparent;color:#c4b5fd;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif">← Log Another Book</button>`;
+      <button onclick="S.view='form';S.step=0;render()" style="width:100%;margin-top:8px;padding:13px;border-radius:14px;border:1.5px solid rgba(196,181,253,0.3);background:transparent;color:#c4b5fd;font-size:14px;font-weight:700;font-family:'DM Sans',sans-serif">← Log Another Book</button>
+      <div class="privacy-note">Anonymous usage data helps us improve the app 💜</div>`;
   }
   document.getElementById('app').innerHTML=header+`<div style="max-width:480px;margin:0 auto;padding:18px 16px">${body}</div>`;
 }
